@@ -59,3 +59,7 @@ app.get("/posts/:postName", function (req, res) {
 app.listen(3000, function () {
   console.log("Server started on port 3000");
 });
+
+//           <li id="home"><a href="/">HOME</a></li>
+//<li id="about"><a href="/about">ABOUT US</a></li>
+//<li id="contact"><a href="/contact">CONTACT US</a></li>
