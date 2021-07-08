@@ -20,6 +20,7 @@ p {
   padding-bottom: 70px;
 }
 
+/* HEADER */
 .navbar {
   padding-top: 15px;
   padding-bottom: 15px;
@@ -53,6 +54,40 @@ p {
   height: 400px;
 }
 
+/* ICONS */
+
+.socialIcons {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  right: 20px;
+  bottom: 100px;
+  justify-content: center;
+  align-items: center;
+}
+
+.icons {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(94, 94, 94);
+  padding: 10px;
+  border-radius: 50%;
+  text-align: center;
+  margin: 5px 0;
+}
+
+.icons i {
+  color: #fff;
+  font-size: 45px;
+}
+
+.icons:hover {
+  background-color: #f29191;
+  transition: all 0.3s ease;
+}
+
+/* FOOTER */
 .footer-padding {
   padding-bottom: 60px;
 }
