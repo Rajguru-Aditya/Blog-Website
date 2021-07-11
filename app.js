@@ -71,14 +71,14 @@ app.post("/compose", function (req, res) {
 });
 
 app.get("/posts/:postId", function (req, res) {
-  const requestedId = _.lowerCase(req.params.postId);
+  const requestedId = req.params.postId;
 
   Blog.findOne({ _id: requestedId }, function (err, result) {
     if (!err) {
       res.render("post", {
         postTitle: result.title,
-        postContent: result.content,
-        postImg: result.image,
+        postContent: result.post,
+        postImg: result.img,
       });
     }
   });
