@@ -4,13 +4,26 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const _ = require("lodash");
+const mongoose = require("mongoose");
+
+mongoose.connect("mongodb://localhost:27017/blogDB", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false,
+});
+
+const blogSchema = {
+  title: String,
+  img: String,
+  post: String,
+};
+
+const Blog = mongoose.model("Blog", blogSchema);
 
 const aboutContent =
   "I am a passionate learner and developer. Interested in frontend. Besides programming, I love watching anime and reading and writing poems.";
 const contactContent =
   "Scelerisque eleifend donec pretium vulputate sapien. Rhoncus urna neque viverra justo nec ultrices. Arcu dui vivamus arcu felis bibendum. Consectetur adipiscing elit duis tristique. Risus viverra adipiscing at in tellus integer feugiat. Sapien nec sagittis aliquam malesuada bibendum arcu vitae. Consequat interdum varius sit amet mattis. Iaculis nunc sed augue lacus. Interdum posuere lorem ipsum dolor sit amet consectetur adipiscing elit. Pulvinar elementum integer enim neque. Ultrices gravida dictum fusce ut placerat orci nulla. Mauris in aliquam sem fringilla ut morbi tincidunt. Tortor posuere ac ut consequat semper viverra nam libero.";
-
-let posts = [];
 
 const app = express();
 
@@ -20,7 +33,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 app.get("/", function (req, res) {
-  res.render("home", { posts: posts });
+  Blog.find({}, function (err, results) {
+    if (!err) {
+      res.render("home", { posts: results });
+    }
+  });
 });
 
 app.get("/about", function (req, res) {
@@ -36,24 +53,32 @@ app.get("/compose", function (req, res) {
 });
 
 app.post("/compose", function (req, res) {
-  const post = {
-    title: req.body.postTitle,
-    content: req.body.postBody,
-    image: req.body.postImg,
-  };
-  posts.push(post);
+  const title = req.body.postTitle;
+  const content = req.body.postBody;
+  const image = req.body.postImg;
+  const post = new Blog({
+    title: title,
+    img: image,
+    post: content,
+  });
+  post.save(function (err) {
+    if (!err) {
+      res.redirect("/");
+    }
+  });
+  //posts.push(post);
   res.redirect("/");
 });
 
-app.get("/posts/:postName", function (req, res) {
-  const requestedTitle = _.lowerCase(req.params.postName);
-  posts.forEach(function (post) {
-    let storedTitle = _.lowerCase(post.title);
-    if (storedTitle === requestedTitle) {
+app.get("/posts/:postId", function (req, res) {
+  const requestedId = _.lowerCase(req.params.postId);
+
+  Blog.findOne({ _id: requestedId }, function (err, result) {
+    if (!err) {
       res.render("post", {
-        postTitle: post.title,
-        postContent: post.content,
-        postImg: post.image,
+        postTitle: result.title,
+        postContent: result.content,
+        postImg: result.image,
       });
     }
   });
